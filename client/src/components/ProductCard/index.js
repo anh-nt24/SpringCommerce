@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import Col from 'react-bootstrap/esm/Col';
 import Card from 'react-bootstrap/esm/Card';
-import Button from 'react-bootstrap/esm/Button';
 
 const ProductCard = ({ products }) => {
     return (

@@ -6,10 +6,7 @@ import {
     MDBCardImage,
     MDBCol,
     MDBContainer,
-    MDBIcon,
-    MDBInput,
     MDBRow,
-    MDBTypography,
 } from "mdb-react-ui-kit";
 import React from "react";
 import { Link } from "react-router-dom";
