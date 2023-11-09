@@ -1,9 +1,9 @@
 import NavBar from "../components/NavBar";
 
-const MainLayout = ({children}) => {
+const MainLayout = ({children, page}) => {
     return (
         <>
-            <NavBar/>
+            {!page && <NavBar/>}
             <div>
                 {children}
             </div>

@@ -67,7 +67,6 @@ const NavBar = () => {
                                 <MDBCollapse navbar open={openBasic}>
                                     <MDBNavbarNav className='custom-nav mr-auto w-0 mb-2 mb-lg-0'>
                                         <MDBNavbarItem>
-
                                         </MDBNavbarItem>
                                     </MDBNavbarNav>
                                     <SearchBar />
