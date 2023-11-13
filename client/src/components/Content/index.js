@@ -6,7 +6,6 @@ import ProductCard from '../ProductCard';
 import { useEffect } from 'react';
 import Col from 'react-bootstrap/esm/Col';
 import FilterPanel from '../Filter';
-// import { GetNearestUsers } from '../../../api/ActivityApi';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 

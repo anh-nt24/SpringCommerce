@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 import vn.edu.tdtu.springcommerce.entity.Account;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account findByEmailAndPassword(String email, String password);
+    Boolean existsByEmail(String email);
+
+    Account findByEmail(String email);
 }

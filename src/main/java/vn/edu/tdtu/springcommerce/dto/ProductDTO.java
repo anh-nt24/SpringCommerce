@@ -10,13 +10,14 @@ import vn.edu.tdtu.springcommerce.entity.Seller;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
+    private Integer id;
     private String name;
     private String description;
     private Double price;
     private Integer stockQuantity;
-    private Boolean isActive;
-    private String image;
     private Integer categoryId;
+    private String imageUrl;
     private Integer shopId;
-
 }
+
+

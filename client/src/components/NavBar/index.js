@@ -16,10 +16,12 @@ import {
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Cart from '../Cart';
+import { Link } from 'react-router-dom';
 
 
 const NavBar = () => {
     const [openBasic, setOpenBasic] = useState(false);
+    const [auth, setAuth] = useState(false);
     return (
         <div className='navbar'>
             <Container className='py-3'>
@@ -47,6 +49,10 @@ const NavBar = () => {
                                     </MDBNavbarNav>
                                     <SearchBar />
                                     <Cart />
+                                    <span style={{paddingRight: "7px"}} className='link-style-none'>|</span>
+                                    {auth ? "Hello" : 
+                                        <Link className='link-style-none' to="/login"> Login </Link>
+                                    }
                                 </MDBCollapse>
                             </MDBContainer>
                         </MDBNavbar>

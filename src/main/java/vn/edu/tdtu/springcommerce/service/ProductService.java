@@ -6,8 +6,10 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.edu.tdtu.springcommerce.dto.ProductDTO;
 import vn.edu.tdtu.springcommerce.entity.Category;
 import vn.edu.tdtu.springcommerce.entity.Product;
+import vn.edu.tdtu.springcommerce.entity.ProductImage;
 import vn.edu.tdtu.springcommerce.entity.Seller;
 import vn.edu.tdtu.springcommerce.repository.CategoryRepository;
+import vn.edu.tdtu.springcommerce.repository.ProductImageRepository;
 import vn.edu.tdtu.springcommerce.repository.ProductRepository;
 import vn.edu.tdtu.springcommerce.repository.SellerRepository;
 
@@ -36,8 +38,11 @@ public class ProductService {
     @Autowired
     private SellerRepository sellerRepository;
 
+    @Autowired
+    private ProductImageRepository imageRepository;
+
     // Create a new product
-    public ProductDTO createProduct(ProductDTO productDTO, MultipartFile imageFile) {
+    public Boolean createProduct(ProductDTO productDTO, MultipartFile imageFile) {
         Product product = new Product();
 
         product.setName(productDTO.getName());
@@ -56,35 +61,48 @@ public class ProductService {
             product.setShopId(seller);
         }
 
-//        if (imageFile != null && !imageFile.isEmpty()) {
-//            String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-//            System.out.println(filename);
-//            String filePath = Paths.get(uploadDirectory, filename).toString();
-//
-//            try (OutputStream os = new FileOutputStream(filePath)) {
-//                os.write(imageFile.getBytes());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            product.setImage(filePath);
-//        }
-        product.setImage("");
-
         Product savedProduct = productRepository.save(product);
-        return mapProductToDTO(savedProduct);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+            String filePath = Paths.get(uploadDirectory, filename).toString();
+
+            try (OutputStream os = new FileOutputStream(filePath)) {
+                os.write(imageFile.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+            ProductImage productImage = new ProductImage();
+            productImage.setImgUrl(filePath);
+            productImage.setProduct(savedProduct);
+            imageRepository.save(productImage);
+        }
+        return true;
     }
 
     // Retrieve a product by ID
     public ProductDTO getProductById(Integer productId) {
         Product product = productRepository.findActiveProductById(productId);
         if (product != null) {
-            return mapProductToDTO(product);
+            try {
+                ProductImage productImage = imageRepository.getImageByProductId(productId);
+                String imageUrl = "";
+                if (productImage != null) {
+                    imageUrl = productImage.getImgUrl();
+                }
+                return mapProductToDTO(product, imageUrl);
+            } catch (Exception e) {
+                System.out.println("Error:");
+                e.printStackTrace();
+            }
+
         }
         return null;
     }
 
     // Update a product by ID
-    public ProductDTO updateProduct(Integer productId, ProductDTO productDTO) {
+    public Boolean updateProduct(Integer productId, ProductDTO productDTO, MultipartFile imageFile) {
         Product product = productRepository.findActiveProductById(productId);
 
         if (product != null) {
@@ -92,10 +110,27 @@ public class ProductService {
             product.setDescription(productDTO.getDescription());
             product.setPrice(productDTO.getPrice());
             product.setStockQuantity(productDTO.getStockQuantity());
-            product.setIsActive(productDTO.getIsActive());
-
             Product updatedProduct = productRepository.save(product);
-            return mapProductToDTO(updatedProduct);
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String filename = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                String filePath = Paths.get(uploadDirectory, filename).toString();
+
+                try (OutputStream os = new FileOutputStream(filePath)) {
+                    os.write(imageFile.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                ProductImage productImage = imageRepository.getImageByProductId(updatedProduct.getId());
+                if (productImage == null) {
+                    productImage = new ProductImage();
+                }
+                productImage.setImgUrl(filePath);
+                productImage.setProduct(updatedProduct);
+                imageRepository.save(productImage);
+            }
+            return true;
         }
 
         return null;
@@ -114,13 +149,14 @@ public class ProductService {
     }
 
     // Utility method to map a Product entity to a ProductDTO
-    private ProductDTO mapProductToDTO(Product product) {
+    private ProductDTO mapProductToDTO(Product product, String image) {
         ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
         productDTO.setPrice(product.getPrice());
         productDTO.setStockQuantity(product.getStockQuantity());
-        productDTO.setIsActive(product.getIsActive());
+        productDTO.setImageUrl(image);
         productDTO.setCategoryId(product.getCategoryId().getId());
         productDTO.setShopId(product.getShopId().getId());
         return productDTO;
@@ -132,7 +168,12 @@ public class ProductService {
         List<ProductDTO> productDTOs = new ArrayList<>();
 
         for (Product product : products) {
-            ProductDTO productDTO = mapProductToDTO(product);
+            ProductImage image = imageRepository.getImageByProductId(product.getId());
+            String imageUrl = "";
+            if (image != null) {
+                imageUrl = image.getImgUrl();
+            }
+            ProductDTO productDTO = mapProductToDTO(product, imageUrl);
             productDTOs.add(productDTO);
         }
 

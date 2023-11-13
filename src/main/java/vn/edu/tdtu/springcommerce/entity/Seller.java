@@ -15,14 +15,8 @@ public class Seller {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name", length = 100, nullable = false)
-    private String name;
-
-    @Column(name = "phone", length = 10, nullable = false)
-    private String phone;
-
-    @Column(name = "address", length = 500, nullable = false)
-    private String address;
+    @Column(name = "shop_name", length = 1000, nullable = false)
+    private String shopName;
 
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;

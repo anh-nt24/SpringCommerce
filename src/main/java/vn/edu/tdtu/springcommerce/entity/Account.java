@@ -16,7 +16,7 @@ public class Account{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "email", length = 100, nullable = false)
     private String email;
@@ -24,4 +24,12 @@ public class Account{
     @Column(name = "password", length = 100, nullable = false)
     private String password;
 
+    @Column(name = "name", length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "phone", length = 10)
+    private String phone;
+
+    @Column(name = "address", length = 500)
+    private String address;
 }

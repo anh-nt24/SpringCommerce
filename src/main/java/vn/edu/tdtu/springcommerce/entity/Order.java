@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import vn.edu.tdtu.springcommerce.dto.AccountDTO;
 
 import java.util.Date;
 
@@ -28,6 +29,6 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    private Account customer;
 }
 
