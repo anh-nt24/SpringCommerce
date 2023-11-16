@@ -4,23 +4,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.tdtu.springcommerce.dto.ProductDTO;
-import vn.edu.tdtu.springcommerce.entity.Category;
-import vn.edu.tdtu.springcommerce.entity.Product;
-import vn.edu.tdtu.springcommerce.entity.ProductImage;
-import vn.edu.tdtu.springcommerce.entity.Seller;
-import vn.edu.tdtu.springcommerce.repository.CategoryRepository;
-import vn.edu.tdtu.springcommerce.repository.ProductImageRepository;
-import vn.edu.tdtu.springcommerce.repository.ProductRepository;
-import vn.edu.tdtu.springcommerce.repository.SellerRepository;
+import vn.edu.tdtu.springcommerce.entity.*;
+import vn.edu.tdtu.springcommerce.repository.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,7 +29,10 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private SellerRepository sellerRepository;
+    private BrandRepository brandRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Autowired
     private ProductImageRepository imageRepository;
@@ -48,17 +44,23 @@ public class ProductService {
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
+        product.setColor(productDTO.getColor());
         product.setStockQuantity(productDTO.getStockQuantity());
 
         Category category = categoryRepository.findById(productDTO.getCategoryId()).orElse(null);
-        Seller seller = sellerRepository.findById(productDTO.getShopId()).orElse(null);
+        Brand brand = brandRepository.findById(productDTO.getBrandId()).orElse(null);
+        Shop shop = shopRepository.findById(productDTO.getShopId()).orElse(null);
 
         if (category != null) {
             product.setCategoryId(category);
         }
 
-        if (seller != null) {
-            product.setShopId(seller);
+        if (brand != null) {
+            product.setBrandId(brand);
+        }
+
+        if (shop != null) {
+            product.setShopId(shop);
         }
 
         Product savedProduct = productRepository.save(product);
@@ -99,6 +101,11 @@ public class ProductService {
 
         }
         return null;
+    }
+
+    public Product findProductById(Integer id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        return optionalProduct.orElse(null);
     }
 
     // Update a product by ID
@@ -153,6 +160,8 @@ public class ProductService {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
+        productDTO.setBrandId(product.getBrandId().getId());
+        productDTO.setColor(product.getColor());
         productDTO.setDescription(product.getDescription());
         productDTO.setPrice(product.getPrice());
         productDTO.setStockQuantity(product.getStockQuantity());
@@ -179,4 +188,40 @@ public class ProductService {
 
         return productDTOs;
     }
+
+    public void decreaseQuantity(Integer productId, int amount) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            int newQuantity = Math.max(0, product.getStockQuantity() - amount);
+            product.setStockQuantity(newQuantity);
+            productRepository.save(product);
+        }
+    }
+
+    public List<ProductDTO> filterProducts(Integer categoryId, Integer brandId, String color, Integer minPrice, Integer maxPrice) {
+        List<Product> filteredProducts = productRepository.findByFilters(categoryId, brandId, color, minPrice, maxPrice);
+
+        List<ProductDTO> result = new ArrayList<>();
+        for (Product product : filteredProducts) {
+            ProductImage productImage = imageRepository.getImageByProductId(product.getId());
+            String imageUrl = "";
+            if (productImage != null) {
+                imageUrl = productImage.getImgUrl();
+            }
+            result.add(mapProductToDTO(product, imageUrl));
+        }
+
+        return result;
+    }
+
+//    private ProductDTO mapProductToDTO(Product product) {
+//        // Mapping logic to convert Product entity to ProductDTO
+//        ProductDTO productDTO = new ProductDTO();
+//        productDTO.setId(product.getId());
+//        productDTO.setName(product.getName());
+//        productDTO.
+////        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getCategoryId(), product.getBrand(), product.getColor());
+//    }
 }

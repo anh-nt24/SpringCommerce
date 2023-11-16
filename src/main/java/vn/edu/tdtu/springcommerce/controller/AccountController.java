@@ -17,7 +17,7 @@ import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 import java.security.Key;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/account")
 public class AccountController {
 
     private static final Key JWT_SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);

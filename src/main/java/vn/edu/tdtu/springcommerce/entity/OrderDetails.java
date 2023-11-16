@@ -25,5 +25,8 @@ public class OrderDetails {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name = "product_price", nullable = false)
+    private Double productPrice;
 }
 

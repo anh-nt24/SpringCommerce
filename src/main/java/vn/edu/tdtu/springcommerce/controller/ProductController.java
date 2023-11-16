@@ -21,7 +21,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 public class ProductController {
 
     private static final Key JWT_SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
@@ -107,6 +107,24 @@ public class ProductController {
             return new ResponseEntity<>(new ApiResponse("JWT token has expired", null), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(new ApiResponse("Invalid JWT token", null), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterProducts(
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer brandId,
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) Integer minPrice,
+            @RequestParam(required = false) Integer maxPrice
+    ) {
+        try {
+            List<ProductDTO> filteredProducts = productService.filterProducts(categoryId, brandId, color, minPrice, maxPrice);
+            return ResponseEntity.ok(filteredProducts);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ApiResponse response = new ApiResponse("Something went wrong", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

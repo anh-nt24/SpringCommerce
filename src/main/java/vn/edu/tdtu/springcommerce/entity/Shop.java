@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "seller")
-public class Seller {
+public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

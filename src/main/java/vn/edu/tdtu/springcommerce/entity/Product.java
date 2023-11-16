@@ -28,6 +28,10 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
+
+    @Column(name = "color")
+    private String color;
+
     @Column(name = "is_active", columnDefinition = "BOOLEAN default true", nullable = false)
     private Boolean isActive = true;
 
@@ -36,6 +40,10 @@ public class Product {
     private Category categoryId;
 
     @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = false)
+    private Brand brandId;
+
+    @ManyToOne
     @JoinColumn(name = "shop_id", nullable = false)
-    private Seller shopId;
+    private Shop shopId;
 }

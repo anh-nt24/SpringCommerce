@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
-import vn.edu.tdtu.springcommerce.dto.AccountDTO;
 
 import java.util.Date;
 
@@ -16,10 +15,13 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "date", nullable = false)
     private Date date;
+
+    @Column(name = "total_price", nullable = false)
+    private Double totalPrice;
 
     @Column(name = "total_amount", nullable = false)
     private Integer totalAmount;

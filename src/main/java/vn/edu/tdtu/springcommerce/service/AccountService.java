@@ -8,6 +8,8 @@ import vn.edu.tdtu.springcommerce.dto.AccountDTO;
 import vn.edu.tdtu.springcommerce.entity.Account;
 import vn.edu.tdtu.springcommerce.repository.AccountRepository;
 
+import java.util.Optional;
+
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
@@ -42,6 +44,11 @@ public class AccountService {
 
     public Account findByEmail(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    public Account findById(Integer id) {
+        Optional<Account> optionalAccount = accountRepository.findById(id);
+        return optionalAccount.orElse(null);
     }
 
     public Boolean find(Account account) {
