@@ -1,5 +1,6 @@
 import Col from 'react-bootstrap/esm/Col';
 import Card from 'react-bootstrap/esm/Card';
+import { Link } from 'react-router-dom';
 
 const ProductCard = ({ products }) => {
     return (
@@ -9,7 +10,7 @@ const ProductCard = ({ products }) => {
                     <Card className="product-item border-0 mb-4">
                         <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                             <Card.Img
-                                src={product.image}
+                                src={product.imageUrl}
                                 alt="product image"
                                 className="img-fluid w-100"
                             />
@@ -19,11 +20,11 @@ const ProductCard = ({ products }) => {
                             paddingLeft: ".5rem", 
                             paddingRight: ".5rem" ,
                         }}>
-                            <a href={`/details/${product.id}`} className="btn btn-sm text-dark p-0">
+                            <Link to={`/details/${product.id}`} className="btn btn-sm text-dark p-0">
                                 <h6 className="product-name mb-3">
                                         {product.name}
                                 </h6>
-                            </a>
+                            </Link>
                             <div className="d-flex">
                                 <b className="price-product" style={{
                                     color: "red",

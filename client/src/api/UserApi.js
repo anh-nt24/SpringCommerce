@@ -3,35 +3,26 @@ import axios from "axios";
 export const UserLogin = async (form) => {
     const config = {
         method: "POST",
-        url: 'http://localhost:8080/login',
-        data:{
-            'username': form.username,
+        url: 'http://localhost:8080/api/account/login',
+        data: {
+            'email': form.email,
             'password': form.password
         },
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
         }
     }
-    const { data } = await axios(config)
-    return data
+    return await axios(config);
 }
 
 export const UserSignUp = async (form) => {
     const config = {
         method: 'POST',
-        url: 'http://localhost:8080/signup',
+        url: 'http://localhost:8080/api/account/register',
         data: form,
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     }
-    const { data } = await axios(config)
-    return  data
-}
-
-export const GetUserInfo = async (id) => {
-    const { data } = await axios.get('http://localhost:8080/getinfo', {
-        params: {id}
-    })
-    return data
+    return await axios(config)
 }

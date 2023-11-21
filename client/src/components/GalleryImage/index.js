@@ -9,20 +9,11 @@ const imageUrls = [
 	'https://www.bootdey.com/image/400x200/40E0D0/000000',
 ];
 
-const GallerySection = () => (
+const GallerySection = ({imageUrl}) => (
 	<Col sm={6} className="push-bit">
 		<a href="#/" className="gallery-link">
-			<img src={imageUrls[0]} width="100%" alt="" className="img-responsive push-bit" />
+			<img src={imageUrl} width="100%" alt="" className="img-responsive push-bit" />
 		</a>
-		<Row className='push-bit'>
-			{imageUrls.slice(1).map((url, index) => (
-				<Col key={index} xs={4}>
-					<a href="#/" className="gallery-link">
-					<img src={url} width="100%" alt="" className="img-responsive" />
-					</a>
-				</Col>
-			))}
-		</Row>
 	</Col>
 );
 

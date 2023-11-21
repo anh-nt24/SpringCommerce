@@ -17,11 +17,13 @@ import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Cart from '../Cart';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 
-const NavBar = () => {
+const NavBar = ({setText, handleSubmit}) => {
     const [openBasic, setOpenBasic] = useState(false);
-    const [auth, setAuth] = useState(false);
+    const [cookies] = useCookies(['user', 'id', 'token']);
+    const { name, id, token } = cookies;
     return (
         <div className='navbar'>
             <Container className='py-3'>
@@ -47,10 +49,10 @@ const NavBar = () => {
                                         <MDBNavbarItem>
                                         </MDBNavbarItem>
                                     </MDBNavbarNav>
-                                    <SearchBar />
+                                    <SearchBar setText={setText} handleSubmit={handleSubmit}/>
                                     <Cart />
                                     <span style={{paddingRight: "7px"}} className='link-style-none'>|</span>
-                                    {auth ? "Hello" : 
+                                    {name ? <span style={{color: "white"}}> {name} </span> : 
                                         <Link className='link-style-none' to="/login"> Login </Link>
                                     }
                                 </MDBCollapse>

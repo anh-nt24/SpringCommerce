@@ -13,7 +13,6 @@ const App = () => {
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/details/:productId" element={<ProductDetailsPage />} />
                 <Route path="/login" element={<Login />} />
-
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
