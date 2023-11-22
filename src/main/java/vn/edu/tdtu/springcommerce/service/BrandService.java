@@ -63,6 +63,7 @@ public class BrandService {
     private BrandDTO mapBrandToDTO(Brand brand) {
         BrandDTO brandDTO = new BrandDTO();
         brandDTO.setName(brand.getName());
+        brandDTO.setId(brand.getId());
         return brandDTO;
     }
 

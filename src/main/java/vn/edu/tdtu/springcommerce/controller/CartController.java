@@ -10,6 +10,7 @@ import vn.edu.tdtu.springcommerce.service.CartService;
 import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -22,7 +23,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> addCartItem(@RequestBody CartDTO cartDto, @RequestParam(name = "id") Integer id) {
         try {
             Integer cartItemId = cartService.addCart(cartDto, id);
@@ -34,8 +35,9 @@ public class CartController {
     }
 
     @PutMapping("/{cartItemId}")
-    public ResponseEntity<?> updateCartItemQuantity(@PathVariable Integer cartItemId, @RequestParam(name="qt") int quantity) {
+    public ResponseEntity<?> updateCartItemQuantity(@PathVariable Integer cartItemId, @RequestBody Map<String, Integer> requestBody) {
         try {
+            Integer quantity = requestBody.get("quantity");
             cartService.updateCartItemQuantity(cartItemId, quantity);
             return ResponseEntity.ok(new ApiResponse("Cart item quantity updated successfully", null));
         } catch (Exception e) {

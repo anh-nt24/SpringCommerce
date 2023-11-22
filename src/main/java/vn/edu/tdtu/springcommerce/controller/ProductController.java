@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.edu.tdtu.springcommerce.dto.ProductDTO;
+import vn.edu.tdtu.springcommerce.dto.ProductFilterDTO;
 import vn.edu.tdtu.springcommerce.entity.ProductImage;
 import vn.edu.tdtu.springcommerce.service.ProductImageService;
 import vn.edu.tdtu.springcommerce.service.ProductService;
@@ -19,7 +20,6 @@ import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 import java.security.Key;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
@@ -110,16 +110,16 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/filter")
-    public ResponseEntity<?> filterProducts(
-            @RequestParam(required = false) Integer categoryId,
-            @RequestParam(required = false) Integer brandId,
-            @RequestParam(required = false) String color,
-            @RequestParam(required = false) Integer minPrice,
-            @RequestParam(required = false) Integer maxPrice
-    ) {
+    @PostMapping("/filter")
+    public ResponseEntity<?> filterProducts(@RequestBody ProductFilterDTO filterDTO) {
         try {
-            List<ProductDTO> filteredProducts = productService.filterProducts(categoryId, brandId, color, minPrice, maxPrice);
+            List<ProductDTO> filteredProducts = productService.filterProducts(
+                    filterDTO.getCategoryId(),
+                    filterDTO.getBrandId(),
+                    filterDTO.getColor(),
+                    filterDTO.getMinPrice(),
+                    filterDTO.getMaxPrice()
+            );
             return ResponseEntity.ok(filteredProducts);
         } catch (Exception e) {
             e.printStackTrace();

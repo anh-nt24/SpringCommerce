@@ -15,6 +15,8 @@ import vn.edu.tdtu.springcommerce.service.AccountService;
 import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 
 import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/account")
@@ -57,8 +59,13 @@ public class AccountController {
                     .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY.getEncoded())
                     .compact();
 
+            Map<String, String> obj = new HashMap<>();
+            obj.put("token", token);
+            obj.put("id", user.getId().toString());
+            obj.put("name", user.getName());
+
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ApiResponse(token, user.getId()));
+                    .body(new ApiResponse("Login successfully", obj));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -18,16 +18,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findAllActiveProducts();
 
     @Query("SELECT p FROM Product p " +
-            "WHERE (:categoryId IS NULL OR p.categoryId = :categoryId) " +
-            "AND (:brandId IS NULL OR p.brandId = :brandId) " +
-            "AND (:color IS NULL OR p.color = :color) " +
+            "WHERE (:categoryIds IS NULL OR p.categoryId.id IN :categoryIds) " +
+            "AND (:brandIds IS NULL OR p.brandId.id IN :brandIds) " +
+            "AND (:colors IS NULL OR p.color IN :colors) " +
             "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
-            "AND p.isActive = true")
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice)" +
+            "And p.isActive = true")
     List<Product> findByFilters(
-            @Param("categoryId") Integer categoryId,
-            @Param("brandId") Integer brandId,
-            @Param("color") String color,
+            @Param("categoryIds") List<Integer> categoryIds,
+            @Param("brandIds") List<Integer> brandIds,
+            @Param("colors") List<String> colors,
             @Param("minPrice") Integer minPrice,
             @Param("maxPrice") Integer maxPrice
     );

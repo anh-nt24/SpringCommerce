@@ -35,16 +35,18 @@ const Detail = () => {
     }, []);
     return (
         <MainLayout className='Homepage'>
-            <Container className="pt-4" style={{minHeight: "500px"}}>
-                <Row>
-                {productDetails && (
-                    <>
-                        <GalleryImage imageUrl={productDetails.imageUrl} />
-                        <ProductDetails data={productDetails} />
-                    </>
-                )}
-                </Row>
-            </Container>
+            {(filteredProducts) => (
+                <Container className="pt-4" style={{minHeight: "500px"}}>
+                    <Row>
+                    {productDetails && (
+                        <>
+                            <GalleryImage imageUrl={productDetails.imageUrl} />
+                            <ProductDetails data={productDetails} />
+                        </>
+                    )}
+                    </Row>
+                </Container>
+            )}
             {/* <AddToCartForm /> */}
         </MainLayout>
     );

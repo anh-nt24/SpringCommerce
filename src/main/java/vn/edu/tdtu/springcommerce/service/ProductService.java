@@ -200,7 +200,7 @@ public class ProductService {
         }
     }
 
-    public List<ProductDTO> filterProducts(Integer categoryId, Integer brandId, String color, Integer minPrice, Integer maxPrice) {
+    public List<ProductDTO> filterProducts(List<Integer> categoryId, List<Integer> brandId, List<String> color, Integer minPrice, Integer maxPrice) {
         List<Product> filteredProducts = productRepository.findByFilters(categoryId, brandId, color, minPrice, maxPrice);
 
         List<ProductDTO> result = new ArrayList<>();
@@ -216,12 +216,4 @@ public class ProductService {
         return result;
     }
 
-//    private ProductDTO mapProductToDTO(Product product) {
-//        // Mapping logic to convert Product entity to ProductDTO
-//        ProductDTO productDTO = new ProductDTO();
-//        productDTO.setId(product.getId());
-//        productDTO.setName(product.getName());
-//        productDTO.
-////        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getCategoryId(), product.getBrand(), product.getColor());
-//    }
 }

@@ -27,10 +27,16 @@ const FilterPanel = ({ onFilter }) => {
         fetchData();
       }, []);
 
-    const [filterValue, setFilterValue] = useState('');
+    const [filterValue, setFilterValue] = useState({
+        categoryId: [],
+        brandId: [],
+        color: [],
+        minPrice: null,
+        maxPrice: null,
+    });
 
     const handleFilterChange = (e) => {
-        setFilterValue(e.target.value);
+        // 
     };
 
     const handleApplyFilter = () => {
@@ -53,7 +59,7 @@ const FilterPanel = ({ onFilter }) => {
                 }}>
                     {categories && categories.map(category => (
                         <li key={category.id}>
-                            <input name='category[]' type="checkbox" id={`category${category.id}`} value={category.id}/>
+                            <input onChange={handleFilterChange} name='category[]' type="checkbox" id={`category${category.id}`} value={category.id}/>
                             <label style={{ paddingLeft: "5px" }} htmlFor={`category${category.id}`}>
                             {category.name}
                             </label>
@@ -67,7 +73,7 @@ const FilterPanel = ({ onFilter }) => {
                 }}>
                     {brand && brand.map(b => (
                         <li key={b.id}>
-                            <input name='brand[]' type="checkbox" id={`brand${b.id}`} value={b.id}/>
+                            <input onChange={handleFilterChange} name='brand[]' type="checkbox" id={`brand${b.id}`} value={b.id}/>
                             <label style={{ paddingLeft: "5px" }} htmlFor={`brand${b.id}`}>
                             {b.name}
                             </label>
@@ -81,7 +87,7 @@ const FilterPanel = ({ onFilter }) => {
                 }}>
                     {colors && colors.map((color, index) => (
                         <li key={index}>
-                            <input name='color[]' type="checkbox" id={`color${index}`} value={color} />
+                            <input onChange={handleFilterChange} name='color[]' type="checkbox" id={`color${index}`} value={color} />
                             <label style={{ paddingLeft: "5px" }} htmlFor={`color${index}`}>
                             {color}
                             </label>
@@ -90,8 +96,8 @@ const FilterPanel = ({ onFilter }) => {
                 </ul>
                 <hr />
                 <h6>Price range</h6>
-                <input style={{width: "80px", marginRight: "5px"}} placeholder="min" value="" className='mr-1' name='minPrice' type='number'/>
-                <input style={{width: "80px", marginRight: "5px"}} placeholder="max" value="" className='mr-1' name='maxPrice' type='number'/>
+                <input onChange={handleFilterChange} style={{width: "80px", marginRight: "5px"}} placeholder="min" value="" className='mr-1' name='minPrice' type='number'/>
+                <input onChange={handleFilterChange} style={{width: "80px", marginRight: "5px"}} placeholder="max" value="" className='mr-1' name='maxPrice' type='number'/>
                 <hr/>
             </fieldset>
             <button className='btn main-btn' onClick={handleApplyFilter}>Apply Filter</button>

@@ -50,16 +50,17 @@ public class CartService {
             CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getId(), product.getId());
 
             if (cartItem == null) {
+                // Product is not in the cart, create a new cart item
                 cartItem = new CartItem();
                 cartItem.setCart(cart);
                 cartItem.setProduct(product);
                 cartItem.setQuantity(cartDto.getQuantity());
-                cartItemRepository.save(cartItem);
             } else {
-                cartItem.setQuantity(cartDto.getQuantity());
-                cartItemRepository.save(cartItem);
+                // Product is already in the cart, update the quantity by adding 1
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
             }
 
+            cartItemRepository.save(cartItem);
             return cartItem.getId();
         }
 
@@ -68,9 +69,15 @@ public class CartService {
 
     public void updateCartItemQuantity(Integer cartItemId, int quantity) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);
-        cartItem.setQuantity(quantity);
-        cartItemRepository.save(cartItem);
+
+        if (quantity == 0) {
+            deleteCartItem(cartItemId);
+        } else {
+            cartItem.setQuantity(quantity);
+            cartItemRepository.save(cartItem);
+        }
     }
+
 
     public void deleteCartItem(Integer cartItemId) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(EntityNotFoundException::new);

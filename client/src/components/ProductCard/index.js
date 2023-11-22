@@ -1,8 +1,28 @@
 import Col from 'react-bootstrap/esm/Col';
 import Card from 'react-bootstrap/esm/Card';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AddToCart } from '../../api/CartApi';
+import { useCookies } from 'react-cookie';
 
 const ProductCard = ({ products }) => {
+    const navigate = useNavigate();
+    const [cookies] = useCookies(['user', 'id', 'token']);
+    const { name, id, token } = cookies;
+    const handleAddToCart = async (event) => {
+        event.preventDefault();
+        if (!id) {
+            navigate('/login');
+        }
+        const productId = event.target.form.productId.value;
+        const response = await AddToCart(id, {
+            'productId': productId,
+            'quantity': 1
+        });
+        if (response) {
+            navigate('/cart')
+        }
+        
+      };
     return (
         <> 
             {products && products.map((product) => (
@@ -32,9 +52,9 @@ const ProductCard = ({ products }) => {
                             </div>
                         </Card.Body>
                         <Card.Footer className="d-flex justify-content-between bg-light border">
-                            <form action="/cart/add" method="post">
-                                <input type="hidden" value={product.id} name="productId" />
-                                <button type="submit" className="btn main-btn btn-sm text-dark p-0 px-2 m-auto">
+                            <form>
+                                <input type="hidden" readOnly={true} value={product.id} name="productId" />
+                                <button onClick={handleAddToCart} className="btn main-btn btn-sm text-dark p-0 px-2 m-auto">
                                     <i className="fas fa-shopping-cart text-primary mr-1"></i>
                                     Add To Cart
                                 </button>

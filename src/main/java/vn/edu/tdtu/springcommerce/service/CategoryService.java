@@ -67,6 +67,7 @@ public class CategoryService {
 
     private CategoryDTO mapCategoryToDTO(Category category) {
         CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(category.getId());
         categoryDTO.setName(category.getName());
         categoryDTO.setDescription(category.getDescription());
         return categoryDTO;
