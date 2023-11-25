@@ -28,8 +28,8 @@ public class ShopController {
         }
     }
 
-    @PutMapping("/{shopId}")
-    public ResponseEntity<?> updateShop(@PathVariable Integer shopId, @RequestBody ShopDTO shopDto) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateShop(@RequestParam(name = "shop") Integer shopId, @RequestBody ShopDTO shopDto) {
         try {
             shopService.updateShop(shopId, shopDto);
             return ResponseEntity.ok(new ApiResponse("Shop updated successfully", null));
@@ -39,8 +39,8 @@ public class ShopController {
         }
     }
 
-    @DeleteMapping("/{shopId}")
-    public ResponseEntity<?> deleteShop(@PathVariable Integer shopId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteShop(@RequestParam(name = "shop") Integer shopId) {
         try {
             shopService.deleteShop(shopId);
             return ResponseEntity.ok(new ApiResponse("Shop deleted successfully", null));
@@ -61,8 +61,8 @@ public class ShopController {
         }
     }
 
-    @GetMapping("/{shopId}")
-    public ResponseEntity<?> getShopById(@PathVariable Integer shopId) {
+    @GetMapping("/view")
+    public ResponseEntity<?> getShopById(@RequestParam(name = "shop") Integer shopId) {
         try {
             ShopDTO shopDTO = shopService.getShopById(shopId);
 

@@ -47,6 +47,7 @@ public class OrderService {
         order.setTotalAmount(orderRequest.getOrderDetails().size());
         order.setTotalPrice(total);
         order.setIsCanceled(false);
+        order.setStatus("preparing");
         order.setDate(new Date());
 
         // Save the order entity
@@ -81,6 +82,7 @@ public class OrderService {
         OrderRequestDTO orderDTO = new OrderRequestDTO();
 
         orderDTO.setCustomerId(order.getCustomer().getId());
+        orderDTO.setStatus(order.getStatus());
         orderDTO.setTotalPrice(order.getTotalPrice());
 
         // Mapping order details
@@ -120,5 +122,13 @@ public class OrderService {
         }
 
         return false;
+    }
+
+    public void updateStatus(Integer orderId, String status) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setStatus(status);
+            orderRepository.save(order);
+        }
     }
 }

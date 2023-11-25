@@ -12,5 +12,6 @@ import java.util.List;
 public class OrderRequestDTO {
     private Integer customerId;
     private Double totalPrice;
+    private String status;
     private List<OrderDetailDTO> orderDetails;
 }

@@ -48,7 +48,7 @@ public class BrandService {
         }
     }
 
-    public List<BrandDTO> getAllCategories() {
+    public List<BrandDTO> getAllBrands() {
         List<Brand> activeCategories = brandRepository.findByIsActiveTrue();
         List<BrandDTO> brandDTOs = new ArrayList<>();
 

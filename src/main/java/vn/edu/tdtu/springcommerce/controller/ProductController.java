@@ -3,8 +3,8 @@ package vn.edu.tdtu.springcommerce.controller;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import vn.edu.tdtu.springcommerce.dto.ProductDTO;
 import vn.edu.tdtu.springcommerce.dto.ProductFilterDTO;
-import vn.edu.tdtu.springcommerce.entity.ProductImage;
-import vn.edu.tdtu.springcommerce.service.ProductImageService;
 import vn.edu.tdtu.springcommerce.service.ProductService;
 import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 
@@ -35,11 +33,14 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+
+
     // Add a new product
     @PostMapping
     public ResponseEntity<?> createProduct(
             @Valid ProductDTO productDTO,
             @RequestParam(name = "image") MultipartFile imageFile) {
+
         Boolean result = productService.createProduct(productDTO, imageFile);
         if (result) {
             ApiResponse response = new ApiResponse("Product added succesfully", null);
@@ -52,8 +53,8 @@ public class ProductController {
     }
 
     // Retrieve a product by ID
-    @GetMapping("/{productId}")
-    public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
+    @GetMapping("/detail")
+    public ResponseEntity<?> getProductById(@RequestParam(name = "pid") Integer productId) {
         ProductDTO productDTO = productService.getProductById(productId);
         if (productDTO == null) {
             ApiResponse response = new ApiResponse("Product not found", null);
@@ -64,14 +65,14 @@ public class ProductController {
     }
 
     // Update a product by ID
-    @PutMapping("/{productId}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer productId,
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(@RequestParam(name = "pid") Integer productId,
                                            @Valid ProductDTO productDTO,
-                                           @RequestParam(name = "image") MultipartFile imageFile) {
+                                           @RequestBody MultipartFile imageFile) {
         Boolean result = productService.updateProduct(productId, productDTO, imageFile);
         if (result) {
             ApiResponse response = new ApiResponse("Product updated succesfully", null);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         else {
             ApiResponse response = new ApiResponse("Product updated failed", null);
@@ -80,9 +81,9 @@ public class ProductController {
     }
 
     // Delete a product by ID
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteProduct(
-            @PathVariable Integer productId,
+            @RequestParam(name = "pid") Integer productId,
             @RequestHeader("Authorization") String token) {
         try {
             // Validate the JWT token
@@ -114,6 +115,7 @@ public class ProductController {
     public ResponseEntity<?> filterProducts(@RequestBody ProductFilterDTO filterDTO) {
         try {
             List<ProductDTO> filteredProducts = productService.filterProducts(
+                    filterDTO.getName(),
                     filterDTO.getCategoryId(),
                     filterDTO.getBrandId(),
                     filterDTO.getColor(),
@@ -128,21 +130,6 @@ public class ProductController {
         }
     }
 
-    private boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(JWT_SECRET_KEY).parseClaimsJws(token);
-            return true;
-        } catch (MalformedJwtException ex) {
-            System.out.println("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            System.out.println("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            System.out.println("JWT claims string is empty.");
-        }
-        return false;
-    }
 
 }
 

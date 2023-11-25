@@ -14,6 +14,7 @@ import vn.edu.tdtu.springcommerce.service.OrderService;
 import vn.edu.tdtu.springcommerce.utils.ApiResponse;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -34,8 +35,8 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<?> getOrderInfo(@PathVariable Integer orderId) {
+    @GetMapping("/detail")
+    public ResponseEntity<?> getOrderInfo(@RequestParam(name = "oid") Integer orderId) {
         try {
             OrderRequestDTO order = orderService.getOrderInfo(orderId);
 
@@ -52,8 +53,8 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> cancelAnOrder(@PathVariable Integer orderId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> cancelAnOrder(@RequestParam("oid") Integer orderId) {
         try {
             boolean isCancelled = orderService.cancelOrder(orderId);
 
@@ -69,8 +70,16 @@ public class OrderController {
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> getAllOrder() {
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<?> updateOrderStatus(@RequestParam("oid") Integer orderId, @RequestBody Map<String, String> requestBody) {
+        try {
+            String status = requestBody.get("status");
+            orderService.updateStatus(orderId, status);
+            return ResponseEntity.ok(new ApiResponse("Order status updated successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("Error updating order status", null));
+        }
+    }
 
 }

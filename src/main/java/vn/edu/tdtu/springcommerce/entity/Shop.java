@@ -21,6 +21,9 @@ public class Shop {
     @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private Account owner;

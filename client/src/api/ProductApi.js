@@ -19,15 +19,15 @@ export const GetAllColor = async () => {
 
 export const GetProductDetails = async (id) => {
     return await axios.get(
-        'http://localhost:8080/api/product/' + id
+        'http://localhost:8080/api/product/detail?pid=' + id
     );
 }
 
-export const SearchProduct = async (text) => {
+export const FilterProduct = async (form) => {
     const config = {
         method: "POST",
-        url: 'http://localhost:8080/api/account/login',
-        data: text,
+        url: 'http://localhost:8080/api/product/filter',
+        data: form,
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
         }

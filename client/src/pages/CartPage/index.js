@@ -25,7 +25,7 @@ const Cart = () => {
     useEffect(() => {
         document.title = 'Cart List';
         const fetchData = async () => {
-            const cartItems = await GetAllCartItems(id);
+            const cartItems = await GetAllCartItems(id, token);
             cartItems.forEach(async (item) => {
                 const productId = item.productId;
                 const response = await GetProductDetails(productId);
@@ -49,10 +49,10 @@ const Cart = () => {
                                 'total': product.price * item.quantity
                             }
                 )
+                console.log(cartItemsData);
             });
         }
         fetchData()
-        console.log(cartItemsData)
     }, []);
     return (
         <MainLayout className='Homepage' page="cart">

@@ -24,7 +24,7 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCartItem(@RequestBody CartDTO cartDto, @RequestParam(name = "id") Integer id) {
+    public ResponseEntity<?> addCartItem(@RequestBody CartDTO cartDto, @RequestParam(name = "uid") Integer id) {
         try {
             Integer cartItemId = cartService.addCart(cartDto, id);
             return ResponseEntity.ok(new ApiResponse("Cart item added successfully", cartItemId));
@@ -34,8 +34,8 @@ public class CartController {
         }
     }
 
-    @PutMapping("/{cartItemId}")
-    public ResponseEntity<?> updateCartItemQuantity(@PathVariable Integer cartItemId, @RequestBody Map<String, Integer> requestBody) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCartItemQuantity(@RequestParam(name = "crt") Integer cartItemId, @RequestBody Map<String, Integer> requestBody) {
         try {
             Integer quantity = requestBody.get("quantity");
             cartService.updateCartItemQuantity(cartItemId, quantity);
@@ -46,8 +46,8 @@ public class CartController {
         }
     }
 
-    @DeleteMapping("/delete/{cartItemId}")
-    public ResponseEntity<?> deleteCartItem(@PathVariable Integer cartItemId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCartItem(@RequestParam(name = "crt") Integer cartItemId) {
         try {
             cartService.deleteCartItem(cartItemId);
             return ResponseEntity.ok(new ApiResponse("Cart item deleted successfully", null));
@@ -58,7 +58,7 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CartDTO>> getAllCartItems(@RequestParam(name="id") Integer accountId) {
+    public ResponseEntity<List<CartDTO>> getAllCartItems(@RequestParam(name="uid") Integer accountId) {
         List<CartDTO> cartItems = cartService.getAllCartItems(accountId);
         return new ResponseEntity<>(cartItems, HttpStatus.OK);
     }

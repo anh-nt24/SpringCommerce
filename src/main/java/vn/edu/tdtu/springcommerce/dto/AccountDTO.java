@@ -13,4 +13,5 @@ public class AccountDTO {
     private String name;
     private String phone;
     private String address;
+    private Boolean isAdmin;
 }

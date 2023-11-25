@@ -200,8 +200,8 @@ public class ProductService {
         }
     }
 
-    public List<ProductDTO> filterProducts(List<Integer> categoryId, List<Integer> brandId, List<String> color, Integer minPrice, Integer maxPrice) {
-        List<Product> filteredProducts = productRepository.findByFilters(categoryId, brandId, color, minPrice, maxPrice);
+    public List<ProductDTO> filterProducts(String name, List<Integer> categoryId, List<Integer> brandId, List<String> color, Integer minPrice, Integer maxPrice) {
+        List<Product> filteredProducts = productRepository.findByFilters(name, categoryId, brandId, color, minPrice, maxPrice);
 
         List<ProductDTO> result = new ArrayList<>();
         for (Product product : filteredProducts) {

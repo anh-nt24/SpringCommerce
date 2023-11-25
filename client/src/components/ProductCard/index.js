@@ -10,14 +10,18 @@ const ProductCard = ({ products }) => {
     const { name, id, token } = cookies;
     const handleAddToCart = async (event) => {
         event.preventDefault();
-        if (!id) {
+        if (!token || !id) {
             navigate('/login');
         }
         const productId = event.target.form.productId.value;
-        const response = await AddToCart(id, {
-            'productId': productId,
-            'quantity': 1
-        });
+        const response = await AddToCart(
+            id, 
+            {
+                'productId': productId,
+                'quantity': 1
+            },
+            token
+        );
         if (response) {
             navigate('/cart')
         }
@@ -31,6 +35,10 @@ const ProductCard = ({ products }) => {
                         <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                             <Card.Img
                                 src={product.imageUrl}
+                                style={
+                                    {"height": "200px" ,
+                                    "width": "200px"}
+                                }
                                 alt="product image"
                                 className="img-fluid w-100"
                             />

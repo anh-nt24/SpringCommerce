@@ -8,4 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ShopRepository extends JpaRepository<Shop, Integer> { }
+public interface ShopRepository extends JpaRepository<Shop, Integer> {
+    Optional<Shop> findByIdAndIsActiveTrue(Integer shopId);
+}

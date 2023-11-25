@@ -29,6 +29,9 @@ public class Order {
     @Column(name = "is_canceled", nullable = false)
     private Boolean isCanceled;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Account customer;

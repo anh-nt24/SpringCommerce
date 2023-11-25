@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.tdtu.springcommerce.dto.ShopDTO;
 import vn.edu.tdtu.springcommerce.entity.Shop;
+import vn.edu.tdtu.springcommerce.repository.AccountRepository;
 import vn.edu.tdtu.springcommerce.repository.ShopRepository;
 
 import java.util.ArrayList;
@@ -15,8 +16,11 @@ public class ShopService {
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
     public Integer addShop(ShopDTO shopDto) {
         Shop shop = mapDTOtoShop(shopDto);
+        shop.setIsActive(true);
         shopRepository.save(shop);
         return shop.getId();
     }
@@ -42,6 +46,7 @@ public class ShopService {
         try {
             Shop existingShop = shopRepository.findById(shopId).orElse(null);
             if (existingShop != null) {
+                existingShop.setIsActive(false);
                 shopRepository.save(existingShop);
             }
             return true;
@@ -63,13 +68,12 @@ public class ShopService {
     }
 
     public ShopDTO getShopById(Integer shopId) {
-        Optional<Shop> optionalShop = shopRepository.findById(shopId);
+        Optional<Shop> optionalShop = shopRepository.findByIdAndIsActiveTrue(shopId);
 
         if (optionalShop.isPresent()) {
             Shop shop = optionalShop.get();
             return mapShopToDTO(shop);
         } else {
-            // Handle the case when the shop is not found
             return null;
         }
     }
@@ -78,13 +82,14 @@ public class ShopService {
         ShopDTO shopDTO = new ShopDTO();
         shopDTO.setShopName(shop.getShopName());
         shopDTO.setDescription(shop.getDescription());
-        shopDTO.setOwner(shop.getOwner().getId()); // Assuming owner is a User entity
+        shopDTO.setOwner(shop.getOwner().getId());
         return shopDTO;
     }
 
     private Shop mapDTOtoShop(ShopDTO shopDTO) {
         Shop shop = new Shop();
         shop.setShopName(shopDTO.getShopName());
+        shop.setOwner(accountRepository.findById(shopDTO.getOwner()).orElse(null));
         if (shopDTO.getDescription() == null) {
             shop.setDescription("");
         } else {

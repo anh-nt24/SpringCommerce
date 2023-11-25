@@ -1,16 +1,26 @@
 import axios from 'axios'
 
-export const AddToCart = async (id, form) => {
+export const AddToCart = async (id, form, token) => {
     const { data } = await axios.post(
-        'http://localhost:8080/api/cart?id=' + id,
-        form
+        'http://localhost:8080/api/cart?uid=' + id,
+        form,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
     );
     return data
 }
 
-export const GetAllCartItems = async (id) => {
+export const GetAllCartItems = async (id, token) => {
     const { data } = await axios.get(
-        'http://localhost:8080/api/cart?id=' + id
+        'http://localhost:8080/api/cart?uid=' + id,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
     );
     return data
 }

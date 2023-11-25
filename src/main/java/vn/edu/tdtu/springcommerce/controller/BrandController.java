@@ -29,8 +29,8 @@ public class BrandController {
         }
     }
 
-    @PutMapping("/{brandId}")
-    public ResponseEntity<?> updateBrand(@PathVariable Integer brandId, @RequestBody BrandDTO brandDto) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateBrand(@RequestParam(name = "brand") Integer brandId, @RequestBody BrandDTO brandDto) {
         try {
             brandService.updateBrand(brandId, brandDto);
             return ResponseEntity.ok(new ApiResponse("Brand updated successfully", null));
@@ -40,8 +40,8 @@ public class BrandController {
         }
     }
 
-    @DeleteMapping("/{brandId}")
-    public ResponseEntity<?> deleteBrand(@PathVariable Integer brandId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteBrand(@RequestParam(name = "brand") Integer brandId) {
         try {
             brandService.deleteBrand(brandId);
             return ResponseEntity.ok(new ApiResponse("Brand deleted successfully", null));
@@ -52,10 +52,10 @@ public class BrandController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllCategories() {
+    public ResponseEntity<?> getAllBrands() {
         try {
-            List<BrandDTO> categories = brandService.getAllCategories();
-            return ResponseEntity.ok(categories);
+            List<BrandDTO> brands = brandService.getAllBrands();
+            return ResponseEntity.ok(brands);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Error retrieving categories", null));

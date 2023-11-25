@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class ProductFilterDTO {
+    private String name;
     private List<Integer> categoryId;
     private List<Integer> brandId;
     private List<String> color;

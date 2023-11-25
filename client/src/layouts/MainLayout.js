@@ -2,7 +2,7 @@ import NavBar from "../components/NavBar";
 
 import { useEffect, useState } from "react";
 
-import { GetAllProducts } from '../api/ProductApi';
+import { FilterProduct, GetAllProducts } from '../api/ProductApi';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -12,19 +12,24 @@ const MainLayout = ({children, page}) => {
     const [products, setProducts] = useState([]);
     const [isSearch, setSearch] = useState(false);
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
         setFilteredProducts(null)
 		event.preventDefault();
-        filterProducts()
+        const data = await FilterProduct({"name": text})
+        const products = data.data;
+        const promises = [];
+        for (const product of products) {
+            const img_response = await fetch(apiUrl + product.imageUrl);
+            if (img_response.ok) {
+                product.imageUrl = URL.createObjectURL(await img_response.blob());
+                product.isLoaded = true;
+                promises.push(Promise.resolve());
+            } else {
+                console.error(`Failed to fetch image. Status: ${img_response.status}`);
+            }
+        }
+        setFilteredProducts(products);
 	};
-
-
-    const filterProducts = () => {
-        const filtered = products.filter(product =>
-            product.name.toLowerCase().includes(text.toLowerCase())
-        );
-        setFilteredProducts(filtered);
-    };
 
     useEffect(() => {
         document.title = 'Shop - Homepage';

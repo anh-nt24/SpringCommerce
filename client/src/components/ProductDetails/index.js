@@ -16,7 +16,7 @@ const ProductDetails = ({data}) => (
 			</span>
 		</div>
 		<hr />
-		<p>
+		<p style={{whiteSpace: "pre-line"}}>
 			{ data.description }
 		</p>
 	</Col>
